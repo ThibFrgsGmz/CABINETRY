@@ -1,0 +1,188 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "user-local-tools",
+            "description": "Cache variables with paths to local tools. Please replace with your own paths. Set to null to use build defaults or completly remove if your not building the concerned target.",
+            "hidden": true
+        },
+        {
+            "name": "user-local-tools-windows-host",
+            "description": "Cache variables with paths to local tools. Please replace with your own paths. Set to null to use build defaults or completly remove if your not building the concerned target.",
+            "hidden": true,
+            "cacheVariables": {
+                "DRV_1_LIB_PATH": {
+                    "type": "FILEPATH",
+                    "value": "<path_to_spacewire_driver>, for example: P:\\Program Files\\DRV_1"
+                }
+            }
+        },
+        {
+            "name": "user-local-tools-linux-host",
+            "description": "Cache variables with paths to local tools. Please replace with your own paths. Set to null to use build defaults or completly remove if your not building the concerned target.",
+            "hidden": true,
+            "cacheVariables": {
+                "DRV_1_LIB_PATH": {
+                    "type": "FILEPATH",
+                    "value": "<path_to_spacewire_driver>, for example: /usr/local/bin/DRV_1"
+                }
+            }
+        },
+        {
+            "name": "user-prefs",
+            "description": "Cache variables with user preferences general to all builds and targets.",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "<Choose betwen: Debug | Release | RelWithDebInfo  | MinSizeRel>",
+                "BUILD_VERSION": "0.9.99.999",
+                "BUILD_VERBOSE": "<Choose between: ON | OFF>"
+            }
+        },
+        {
+            "name": "librarian-static",
+            "description": "Cache variables to make the librarian generate a static library.",
+            "hidden": true,
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "FALSE"
+            }
+        },
+        {
+            "name": "librarian-shared",
+            "description": "Cache variables to make the librarian generate a shared library.",
+            "hidden": true,
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "TRUE"
+            }
+        },
+        {
+            "name": "librarian-shared-windows",
+            "inherits": [
+                "librarian-shared"
+            ],
+            "description": "Cache variables to make the librarian generate a shared library.",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS": {
+                    "type": "BOOL",
+                    "value": "ON"
+                }
+            }
+        },
+        {
+            "name": "WINDOWS_AMD64_SHARED",
+            "inherits": [
+                "user-local-tools",
+                "user-local-tools-windows-host",
+                "user-prefs",
+                "librarian-shared-windows",
+                "WINDOWS_AMD64_preset"
+            ]
+        },
+        {
+            "name": "WINDOWS_AMD64_STATIC",
+            "inherits": [
+                "user-local-tools",
+                "user-local-tools-windows-host",
+                "user-prefs",
+                "librarian-static",
+                "WINDOWS_AMD64_preset"
+            ]
+        },
+        {
+            "name": "LINUX_AMD64_SHARED",
+            "inherits": [
+                "user-local-tools",
+                "user-local-tools-linux-host",
+                "user-prefs",
+                "librarian-shared",
+                "LINUX_AMD64_preset"
+            ]
+        },
+        {
+            "name": "LINUX_AMD64_STATIC",
+            "inherits": [
+                "user-local-tools",
+                "user-local-tools-linux-host",
+                "user-prefs",
+                "librarian-static",
+                "LINUX_AMD64_preset"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "WINDOWS_AMD64_STATIC",
+            "displayName": "WINDOWS_AMD64_STATIC",
+            "configurePreset": "WINDOWS_AMD64_STATIC"
+        },
+        {
+            "name": "WINDOWS_AMD64_SHARED",
+            "displayName": "WINDOWS_AMD64_SHARED",
+            "configurePreset": "WINDOWS_AMD64_SHARED"
+        },
+        {
+            "name": "LINUX_AMD64_STATIC",
+            "displayName": "LINUX_AMD64_STATIC",
+            "configurePreset": "LINUX_AMD64_STATIC"
+        },
+        {
+            "name": "LINUX_AMD64_SHARED",
+            "displayName": "LINUX_AMD64_SHARED",
+            "configurePreset": "LINUX_AMD64_SHARED"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "WINDOWS_AMD64_STATIC",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "WINDOWS_AMD64_STATIC"
+                },
+                {
+                    "type": "build",
+                    "name": "WINDOWS_AMD64_STATIC"
+                }
+            ]
+        },
+        {
+            "name": "WINDOWS_AMD64_SHARED",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "WINDOWS_AMD64_SHARED"
+                },
+                {
+                    "type": "build",
+                    "name": "WINDOWS_AMD64_SHARED"
+                }
+            ]
+        },
+        {
+            "name": "LINUX_AMD64_STATIC",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "LINUX_AMD64_STATIC"
+                },
+                {
+                    "type": "build",
+                    "name": "LINUX_AMD64_STATIC"
+                }
+            ]
+        },
+        {
+            "name": "LINUX_AMD64_SHARED",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "LINUX_AMD64_SHARED"
+                },
+                {
+                    "type": "build",
+                    "name": "LINUX_AMD64_SHARED"
+                }
+            ]
+        }
+    ]
+}

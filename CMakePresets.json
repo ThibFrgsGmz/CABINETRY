@@ -1,0 +1,50 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "general-preset",
+            "description": "Preset with general configurations common to all presets",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "architecture": {
+                "value": "unspecified",
+                "strategy": "external"
+            }
+        },
+        {
+            "name": "WINDOWS_AMD64_preset",
+            "description": "Preset for Windows with AMD64 (or x86_64) architecture",
+            "inherits": ["general-preset"],
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": {
+                    "type": "FILEPATH",
+                    "value": "${sourceDir}/cmake/toolchain/AMD64-Windows.cmake"
+                },
+                "DRV_API": "Drv-1",
+                "OS": "Windows"
+            }
+        },
+        {
+            "name": "LINUX_AMD64_preset",
+            "description": "Preset for Linux with AMD64 architecture",
+            "inherits": ["general-preset"],
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": {
+                    "type": "FILEPATH",
+                    "value": "${sourceDir}/cmake/toolchain/AMD64-Linux.cmake"
+                },
+                "DRV_API": "Drv-1",
+                "OS": "Linux"
+            }
+        }
+    ]
+}
