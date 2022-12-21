@@ -20,12 +20,21 @@ if(NOT BUILD_VERSION)
     set(BUILD_VERSION 0.0.0.0)
 endif()
 
+# Get the latest abbreviated commit hash of the working branch
+execute_process(
+    COMMAND git log -1 --format=%h
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    OUTPUT_VARIABLE GIT_SHORT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+
 project(CABINETRY VERSION ${BUILD_VERSION} LANGUAGES C CXX ASM)
 
 set(PROJECT_OUTPUT_NAME cabinetry)
 
 message(STATUS "")
-message(STATUS "Building '${CMAKE_PROJECT_NAME}' version ${PROJECT_VERSION} using build type '${CMAKE_BUILD_TYPE}'.")
+message(STATUS "Building '${CMAKE_PROJECT_NAME}' version ${PROJECT_VERSION} @${GIT_SHORT_HASH} using build type '${CMAKE_BUILD_TYPE}'.")
 message(STATUS "Source directory is '${CMAKE_SOURCE_DIR}'.")
 message(STATUS "Build  directory is '${CMAKE_BINARY_DIR}'.")
 if(BUILD_SHARED_LIBS)
@@ -43,23 +52,30 @@ include(target)
 
 include_directories("${PROJECT_SOURCE_DIR}/include/")
 
-string(TOLOWER "${DRV_API}" DRV_API_LOWER)
+# string(TOLOWER "${DRV_API}" DRV_API_LOWER)
 
-if(DRV_API STREQUAL "Drv-1")
-    find_package(Drv1 REQUIRED)
+# if(DRV_API STREQUAL "Drv-1")
+#     find_package(Drv1 REQUIRED)
 
-    if (NOT Drv1_FOUND)
-        message(SEND_ERROR "\nDrv1 API is not found in the specified path.")
-        message(SEND_ERROR "Make sure you have set the `DRV_1_LIB_PATH` cache variable to ${DRV_1_LIB_PATH}.\n")
-    endif()
-endif()
+#     if (NOT Drv1_FOUND)
+#         message(SEND_ERROR "\nDrv1 API is not found in the specified path.")
+#         message(SEND_ERROR "Make sure you have set the `DRV_1_LIB_PATH` cache variable to ${DRV_1_LIB_PATH}.\n")
+#     endif()
+# endif()
 
 add_library(${PROJECT_OUTPUT_NAME} "")
-add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/src/drivers/${DRV_API_LOWER}")
+# add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/src/drivers/${DRV_API_LOWER}")
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/src/shared")
 
-if(BUILD_SHARED_LIBS AND DRV_API STREQUAL "Drv-1")
-    target_link_libraries(${PROJECT_OUTPUT_NAME} PRIVATE "$<LINK_GROUP:RESCAN,${DRV_1_LIBRARIES}>")
-endif()
+# if(BUILD_SHARED_LIBS AND DRV_API STREQUAL "Drv-1")
+#     target_link_libraries(${PROJECT_OUTPUT_NAME} PRIVATE "$<LINK_GROUP:RESCAN,${DRV_1_LIBRARIES}>")
+# endif()
 
+# Experience shows that explicit package naming can help make it easier to sort
+# out potential ABI related issues before they start, while helping you
+# track a build to a specific GIT HASH
+# set(CPACK_PACKAGE_FILE_NAME
+#     "${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}-${GIT_SHORT_HASH}-${CMAKE_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}-${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}"
+# )
+# include(CPack)
 
