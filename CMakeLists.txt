@@ -56,6 +56,10 @@ include(target)
 
 include_directories("${PROJECT_SOURCE_DIR}/include/")
 
+set(VERSION_FILE_HPP "cabinetry_version.h")
+set(VERSION_FILE_CMAKE "${VERSION_FILE_HPP}.in")
+configure_file("${CMAKE_SOURCE_DIR}/cmake/${VERSION_FILE_CMAKE}" "${CMAKE_SOURCE_DIR}/include/${VERSION_FILE_HPP}" ESCAPE_QUOTES)
+
 # string(TOLOWER "${DRV_API}" DRV_API_LOWER)
 
 # if(DRV_API STREQUAL "Drv-1")
