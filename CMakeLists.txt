@@ -30,8 +30,13 @@ execute_process(
 
 
 project(CABINETRY VERSION ${BUILD_VERSION} LANGUAGES C CXX ASM)
-
 set(PROJECT_OUTPUT_NAME cabinetry)
+
+option(BUILD_SHARED_LIBS "Build .dll/.so" OFF)
+option(BUILD_TEST "Build C++ test binaries (need gtest and gbenchmark)" OFF)
+option(USE_CODE_COVERAGE "Compile C/C++ with code coverage flags" OFF)
+option(USE_ASAN "Use Address+Undefined Sanitizers" OFF)
+option(USE_TSAN "Use Thread Sanitizer" OFF)
 
 message(STATUS "")
 message(STATUS "Configuration script parsing status [")
@@ -59,6 +64,8 @@ include_directories("${PROJECT_SOURCE_DIR}/include/")
 set(VERSION_FILE_HPP "cabinetry_version.h")
 set(VERSION_FILE_CMAKE "${VERSION_FILE_HPP}.in")
 configure_file("${CMAKE_SOURCE_DIR}/cmake/${VERSION_FILE_CMAKE}" "${CMAKE_SOURCE_DIR}/include/${VERSION_FILE_HPP}" ESCAPE_QUOTES)
+
+
 
 # string(TOLOWER "${DRV_API}" DRV_API_LOWER)
 
