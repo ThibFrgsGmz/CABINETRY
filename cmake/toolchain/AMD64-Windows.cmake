@@ -42,7 +42,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 foreach(lang IN ITEMS C CXX)
     # Specify the C and C++ standard required for ALL targets
-    set(CMAKE_${lang}_STANDARD 11 CACHE INTERNAL "${lang} standard for all targets")
+    set(CMAKE_${lang}_STANDARD 11 CACHE INTERNAL "The ${lang} standard whose features are requested to build this target.")
     # Force the specified language standard: if the compiler does not support the specified standard, it will generate an error.
     # Without this CMake will be resilient and will fall back to the last standard the compiler supports instead.
     set(CMAKE_${lang}_STANDARD_REQUIRED ON)
