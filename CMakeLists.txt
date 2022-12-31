@@ -1,40 +1,51 @@
-######################################################################
+# ##############################################################################
 #
 # CMake build recipe for CABINETRY.
 #
-######################################################################
+# ##############################################################################
 cmake_minimum_required(VERSION 3.25)
 
-if (BUILD_VERBOSE)
-    set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON" FORCE) # Debug helper
+if(BUILD_VERBOSE)
+  set(CMAKE_VERBOSE_MAKEFILE
+      ON
+      CACHE BOOL "ON" FORCE) # Debug helper
 endif()
-
-message(STATUS "INFO: Running CMake ${CMAKE_VERSION}\n\n")
-
 if(NOT OS OR OS STREQUAL "")
-    message(FATAL_ERROR "\n\nMissing build option 'OS', please select one to continue.")
+  message(
+    FATAL_ERROR "\n\nMissing build option 'OS', please select one to continue.")
 endif()
-
 # Set default version
 if(NOT BUILD_VERSION)
-    set(BUILD_VERSION 0.0.0.0)
+  set(BUILD_VERSION 0.0.0.0)
+endif()
+# Set default build type
+if(NOT CMAKE_BUILD_TYPE)
+  message(STATUS "Build type not set - defaulting to Release")
+  set(CMAKE_BUILD_TYPE
+      "Release"
+      CACHE
+        STRING
+        "Choose the type of build from: Debug Release RelWithDebInfo MinSizeRel Coverage."
+        FORCE)
 endif()
 
 # Get the latest abbreviated commit hash of the working branch
 execute_process(
-    COMMAND git log -1 --format=%h
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-    OUTPUT_VARIABLE GIT_SHORT_HASH
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
+  COMMAND git log -1 --format=%h
+  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+  OUTPUT_VARIABLE GIT_SHORT_HASH
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-
-project(CABINETRY VERSION ${BUILD_VERSION} LANGUAGES C CXX ASM)
+# ---[ Project and semantic versioning.
+project(
+  CABINETRY
+  VERSION ${BUILD_VERSION}
+  LANGUAGES C CXX ASM)
 set(PROJECT_OUTPUT_NAME cabinetry)
 
-# ---[ Options.
-# Note to developers: if you add an option below, make sure you also add it to
-# cmake/Summary.cmake so that the summary prints out the option values.
+# ---[ Options. Note to developers: if you add an option below, make sure you
+# also add it to cmake/Summary.cmake so that the summary prints out the option
+# values.
 option(BUILD_SHARED_LIBS "Build .dll/.so" OFF)
 option(BUILD_TEST "Build C++ test binaries (need gtest and gbenchmark)" OFF)
 option(USE_CODE_COVERAGE "Compile C/C++ with code coverage flags" OFF)
@@ -51,12 +62,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Set default build type
-if(NOT CMAKE_BUILD_TYPE)
-    message(STATUS "Build type not set - defaulting to Release")
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build from: Debug Release RelWithDebInfo MinSizeRel Coverage." FORCE)
-endif()
-
 include(target)
 include(Summary)
 print_configuration_summary()
@@ -66,10 +71,7 @@ include_directories("${PROJECT_SOURCE_DIR}/include/")
 set(VERSION_FILE_HPP "cabinetry_version.h")
 set(VERSION_FILE_CMAKE "${VERSION_FILE_HPP}.in")
 configure_file("${CMAKE_SOURCE_DIR}/cmake/${VERSION_FILE_CMAKE}"
-    "${CMAKE_SOURCE_DIR}/include/${VERSION_FILE_HPP}"
-    ESCAPE_QUOTES)
-
-
+               "${CMAKE_SOURCE_DIR}/include/${VERSION_FILE_HPP}" ESCAPE_QUOTES)
 
 # string(TOLOWER "${DRV_API}" DRV_API_LOWER)
 
@@ -97,4 +99,3 @@ add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/src/shared")
 #     "${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}-${GIT_SHORT_HASH}-${CMAKE_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}-${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}"
 # )
 # include(CPack)
-
