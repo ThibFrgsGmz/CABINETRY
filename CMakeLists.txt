@@ -32,38 +32,31 @@ execute_process(
 project(CABINETRY VERSION ${BUILD_VERSION} LANGUAGES C CXX ASM)
 set(PROJECT_OUTPUT_NAME cabinetry)
 
+# ---[ Options.
+# Note to developers: if you add an option below, make sure you also add it to
+# cmake/Summary.cmake so that the summary prints out the option values.
 option(BUILD_SHARED_LIBS "Build .dll/.so" OFF)
 option(BUILD_TEST "Build C++ test binaries (need gtest and gbenchmark)" OFF)
 option(USE_CODE_COVERAGE "Compile C/C++ with code coverage flags" OFF)
 option(USE_ASAN "Use Address+Undefined Sanitizers" OFF)
 option(USE_TSAN "Use Thread Sanitizer" OFF)
 
-message(STATUS "")
-message(STATUS "Configuration script parsing status [")
-message(STATUS "  Description             : ${CMAKE_PROJECT_NAME}")
-message(STATUS "  Version                 : ${PROJECT_VERSION} (${GIT_SHORT_HASH})")
-message(STATUS "  Build type              : ${CMAKE_BUILD_TYPE}")
-if(BUILD_SHARED_LIBS)
-message(STATUS "  Librarian mode          : SHARED")
-else()
-message(STATUS "  Librarian mode          : STATIC")
-endif()
-message(STATUS "  Source directory        : ${CMAKE_SOURCE_DIR}")
-message(STATUS "  Build directory         : ${CMAKE_BINARY_DIR}")
-message(STATUS "]")
-message(STATUS "")
-
+# ---[ CMake scripts + modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/toolchain/")
 
 include(target)
+include(Summary)
+print_configuration_summary()
 
 include_directories("${PROJECT_SOURCE_DIR}/include/")
 
 set(VERSION_FILE_HPP "cabinetry_version.h")
 set(VERSION_FILE_CMAKE "${VERSION_FILE_HPP}.in")
-configure_file("${CMAKE_SOURCE_DIR}/cmake/${VERSION_FILE_CMAKE}" "${CMAKE_SOURCE_DIR}/include/${VERSION_FILE_HPP}" ESCAPE_QUOTES)
+configure_file("${CMAKE_SOURCE_DIR}/cmake/${VERSION_FILE_CMAKE}"
+    "${CMAKE_SOURCE_DIR}/include/${VERSION_FILE_HPP}"
+    ESCAPE_QUOTES)
 
 
 
