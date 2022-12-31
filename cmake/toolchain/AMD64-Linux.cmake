@@ -50,4 +50,10 @@ foreach(lang IN ITEMS C CXX)
     # Disable all C and C++ extensions on ALL targets.
     # This forces the use of -std=c17 and -std=c++17 instead of -std=gnu17 and -std=gnu++17
     set(CMAKE_${lang}_EXTENSIONS OFF CACHE INTERNAL "${lang} compiler extensions OFF")
+
+    # Set -ffunction-sections and -fdata-sections so that each method has its own
+    # text section. This allows the linker to remove unused section when the flag
+    # -Wl,-gc-sections is provided at link time.
+    string(APPEND CMAKE_${lang}_FLAGS " -ffunction-sections")
+    string(APPEND CMAKE_${lang}_FLAGS " -fdata-sections")
 endforeach()
