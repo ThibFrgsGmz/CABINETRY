@@ -6,3 +6,4 @@ test/**
 CMakeFiles/**
 build.txt
 CMakeUserPresets.json
+cabinetry_version.h
